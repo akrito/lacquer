@@ -1,9 +1,10 @@
 import httplib
-import redis
+from berkeleydb import cache_get, cache_set
+#from rediscache import cache_get, cache_set
 from urllib import quote as url_quote
 from utils import parse_headers
 
-def build_backend_request(self, addr, port, request):
+def build_backend_request(request):
     """
     Based on Ian Bicking's WSGIProxy (http://pythonpaste.org/wsgiproxy/)
 
@@ -54,29 +55,11 @@ def send_backend_request(addr, port, request):
     conn.close()
     return (status, headers_out, body)
 
-def route(cls, request):
+def route(request):
     routes = {
-        'localhost:8444': ('localhost', 8000)
+        'localhost:8445': ('localhost', 8000)
     }
     env = request['env']
     if env['HTTP_HOST'] in routes:
         return routes[env['HTTP_HOST']]
     return None
-
-def get_cache(env):
-    # if the request is a GET:
-    #   if there are no cookies:
-    #     get the thing
-    #     if it's timed out:
-    #       if grace is allowed:
-    #         set the timeout to the future
-    #         disallow grace
-    #       return none
-    #     else:
-    #       return it
-    return None
-
-def set_cache(response):
-    # set the object, timeout, and allow grace
-    return None
-
